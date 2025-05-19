@@ -10,7 +10,7 @@ public class HowtoPlayController : MonoBehaviour
     public float dragSensitivity = 0.1f;
     public float horizontalBoundary = 3f;
     public float rideCheckRadius = 2.5f;
-    public bool hasJumped=false;
+    public bool hasJumped = false;
 
     public Animator animator;
     public Rigidbody rb;
@@ -29,6 +29,7 @@ public class HowtoPlayController : MonoBehaviour
     public string ridingOffsetName = "RidingOffset";
     private Transform currentAnimal = null;
     private Vector3 ridingPositionOffset = Vector3.zero;
+    private Vector3 lastPositionBeforeJump;
 
     private void Start()
     {
@@ -176,18 +177,19 @@ public class HowtoPlayController : MonoBehaviour
                 }
                 break;
 
-            case PlayerState.Riding:
+            /*case PlayerState.Riding:
                 if (!IsHolding && !hasJumped)
                 {
+                    StopRiding();
                     PrepareForJump();
                     hasJumped = true;
                 }
-                break;
+                break;*/
 
             case PlayerState.Jumping:
                 if (IsGrounded())
                 {
-                    if (animalNearby)
+                    if (CheckForAnimalsInRadius())
                     {
                         StartRiding();
                         hasJumped = false; // Reset for next jump
@@ -221,21 +223,32 @@ public class HowtoPlayController : MonoBehaviour
         return false;
     }
 
-
-    void PrepareForJump()
+    public void PrepareForJump()
     {
         radiusVisualizer.gameObject.SetActive(true);
         currentState = PlayerState.Jumping;
+        lastPositionBeforeJump = transform.position;
         PerformJump();
     }
 
     bool IsGrounded()
     {
         // Simple ground check - you might want to improve this
-        return Mathf.Abs(rb.velocity.y) < 0.1f;
+        return Mathf.Abs(rb.linearVelocity.y) < 0.1f;
     }
 
-
+    void StopRiding()
+    {
+        if (transform.parent != null)
+        {
+            // Unparent and restore physics
+            transform.SetParent(null);
+            rb.isKinematic = false;
+            
+            // Reset position to where we were before riding
+            transform.position = lastPositionBeforeJump;
+        }
+    }
 
     public void StartRiding()
     {
@@ -245,13 +258,20 @@ public class HowtoPlayController : MonoBehaviour
             if (ridingOffset != null)
             {
                 // Reset player physics before parenting
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
                 rb.isKinematic = true;
 
                 // Parent to the animal
                 transform.position = ridingOffset.position;
                 transform.rotation = ridingOffset.rotation;
                 transform.SetParent(ridingOffset);
+                lastPositionBeforeJump = ridingOffset.position;
+                RidingMovement movement = currentAnimal.GetComponent<RidingMovement>();
+                if (movement != null)
+                {
+                    movement.enabled = true;
+                }
+                this.enabled = false; // disable HowtoPlayController when riding
             }
         }
 
@@ -259,11 +279,6 @@ public class HowtoPlayController : MonoBehaviour
         currentState = PlayerState.Riding;
         Debug.Log("Started Riding!");
     }
-    
-
-
-    
-    
 
     void GameOver()
     {

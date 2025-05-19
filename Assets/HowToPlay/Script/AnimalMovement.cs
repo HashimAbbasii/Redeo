@@ -24,15 +24,15 @@ public class AnimalMovement : MonoBehaviour
 
     public void StartRunning()
     {
-        rb.velocity = Vector3.forward * runSpeed;
+        rb.linearVelocity = Vector3.forward * runSpeed;
     }
 
     void FixedUpdate()
     {
         // Maintain constant forward velocity
-        if (rb.velocity.z < runSpeed)
+        if (rb.linearVelocity.z < runSpeed)
         {
-            rb.velocity = new Vector3(0, rb.velocity.y, runSpeed);
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, runSpeed);
         }
     }
 }
