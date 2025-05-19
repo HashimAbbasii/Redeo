@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using static HowtoPlayController;
 
 
 public class SpawnManager : MonoBehaviour
@@ -82,7 +83,11 @@ public class SpawnManager : MonoBehaviour
        
         int randomIndex = Random.Range(0, animalPrefabs.Length);
         GameObject animal = GetAnimalFromPool(randomIndex);
-    
+        if(PlayerState.Jumping == playerMovement.currentState  && PlayerState.Riding == playerMovement.currentState)
+        {
+            animal.SetActive(true);
+            activeAnimals.Add(animal);return;
+        }
         // Position ahead of player
         float spawnZ = player.position.z + Random.Range(minSpawnDistance, maxSpawnDistance); 
         float spawnX = Random.Range(-horizontalBoundary, horizontalBoundary);

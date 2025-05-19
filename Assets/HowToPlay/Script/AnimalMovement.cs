@@ -1,31 +1,38 @@
 using UnityEngine;
 
-public class AnimalMovement : MonoBehaviour 
+public class AnimalMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float runSpeed = 2f; // Set this higher than player's maxSpeed
+    public float runSpeed = 5f;
     public bool startRunningImmediately = true;
-    
+
     private Rigidbody rb;
 
-    void Awake() {
+    void Awake()
+    {
         rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
-    void OnEnable() {
-        if(startRunningImmediately) {
+    void OnEnable()
+    {
+        if (startRunningImmediately)
+        {
             StartRunning();
         }
     }
 
-    public void StartRunning() {
-        // Set constant velocity
-        rb.velocity = transform.forward * runSpeed;
+    public void StartRunning()
+    {
+        rb.velocity = Vector3.forward * runSpeed;
     }
 
-    void FixedUpdate() {
-        // Maintain constant forward speed while preventing y-axis rotation
-        rb.velocity = new Vector3(0, rb.velocity.y, runSpeed);
-        rb.angularVelocity = Vector3.zero;
+    void FixedUpdate()
+    {
+        // Maintain constant forward velocity
+        if (rb.velocity.z < runSpeed)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, runSpeed);
+        }
     }
 }
