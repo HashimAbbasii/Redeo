@@ -1913,7 +1913,7 @@ MonoBehaviour:
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
-  FollowOffset: {x: 0, y: 2.86, z: -5.26}
+  FollowOffset: {x: 1.54, y: 3.87, z: -6.67}
 --- !u!114 &1402659322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1965,8 +1965,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402659319}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24644159, y: 0, z: 0, w: 0.9691577}
-  m_LocalPosition: {x: 0, y: 3.1499999, z: -1.7110002}
+  m_LocalRotation: {x: 0.2528065, y: -0.109484926, z: 0.028805653, w: 0.9608705}
+  m_LocalPosition: {x: 1.54, y: 4.16, z: -3.121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2702,8 +2702,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844132327}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.24644159, y: 0, z: 0, w: 0.9691577}
-  m_LocalPosition: {x: 0, y: 3.1499999, z: -1.7110002}
+  m_LocalRotation: {x: 0.2528065, y: -0.109484926, z: 0.028805653, w: 0.9608705}
+  m_LocalPosition: {x: 1.54, y: 4.16, z: -3.121}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4662,7 +4662,7 @@ MonoBehaviour:
   detectionRadius: 5
   ridingOffset: {x: 0, y: 1, z: 0}
   jumpDuration: 2
-  jumpHeight: 2
+  jumpHeight: 5
   sheepTag: Animal
   isRiding: 0
 --- !u!4 &1873676147

@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     // private bool isRunning = false;
     public float jumpDuration = 2f;
     private bool isJumping = false;
-    public float jumpHeight = 2f;
+    public float jumpHeight = 4f;
     public string sheepTag = "Animal";
     private bool hasJumpedOffAnimal = false;
     private GameObject lastJumpedFromAnimal = null;
@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
             lastJumpedFromAnimal = currentAnimal != null ? currentAnimal.gameObject : null;
             isRiding = false;
             isJumping = true;
+            animator.SetTrigger("Jump");
 
             transform.SetParent(null);
             rb.isKinematic = false;
@@ -152,10 +153,11 @@ public class PlayerController : MonoBehaviour
         transform.SetParent(null);      // Ensure not parented to previous animal
         rb.isKinematic = false;         // Re-enable physics
         isJumping = true;
-       
+       // animator.SetTrigger("Jump"); // 🔥 Trigger jump animation
+
 
         // Trigger jump animation
-      //  animator.SetBool("IsJumping", true);
+        //  animator.SetBool("IsJumping", true);
 
         // Slow motion start
         float originalTimeScale = Time.timeScale;
