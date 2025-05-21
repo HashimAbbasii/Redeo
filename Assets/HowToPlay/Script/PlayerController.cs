@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     public GameObject lastJumpedFromAnimal = null;
     public PlayerRadiusDetector radiusDetector;
 
+    [Header("Particle Effect")]
+    public ParticleSystem SnapSplash;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -362,6 +364,7 @@ IEnumerator JumpArcAndSnap()
         Debug.Log(currentAnimal != null 
             ? $"Found AnimalController on {sheep.name}" 
             : $"WARNING: No AnimalController on {sheep.name}");
+            SnapSplash.Play();
     }
     else
     {

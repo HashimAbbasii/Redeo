@@ -20,10 +20,18 @@ public class UiManager : MonoBehaviour
     
     [Header("Slider")]
     public Slider slider;
+    public GameObject gameController;
+    public GameObject SpawnController;
+    public GameObject FirstSpawnSheep;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InputrectTransform=InputPanel.GetComponent<RectTransform>();
+        gameController.SetActive(false);
+        SpawnController.SetActive(false);
+        FirstSpawnSheep.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -43,8 +51,8 @@ public class UiManager : MonoBehaviour
 
     public void SubmitButton()
     {
-        PlayerPrefs.GetString("name", enterTheName.text);
-        PlayerPrefs.GetString("age", enterTheAge.text);
+        PlayerPrefs.SetString("name", enterTheName.text);
+        PlayerPrefs.SetString("age", enterTheAge.text);
         submitButton.interactable = false;
         LoadingPanel.gameObject.SetActive(true);
         RectTransform loadingPanel=LoadingPanel.GetComponent<RectTransform>();
@@ -80,6 +88,10 @@ public class UiManager : MonoBehaviour
         }
 
         slider.value = to; // Ensure final value
+        LoadingPanel.gameObject.SetActive(false);
+        gameController.SetActive(true);
+        SpawnController.SetActive(true);
+        FirstSpawnSheep.SetActive(true);
     }
 }
     
