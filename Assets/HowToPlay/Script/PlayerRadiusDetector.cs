@@ -8,12 +8,19 @@ public class PlayerRadiusDetector : MonoBehaviour
 
     private PlayerController playerController;
     private bool gamePaused = false;
+    private bool hasValidTarget = false;
+    public Material greenColor;
+    public Material RedColor;
 
 
     void Start()
     {
         playerController = GetComponent<PlayerController>();
-        if (lineRenderer) lineRenderer.loop = true; // Optional: smooth circle
+        if (lineRenderer)
+        {
+            lineRenderer.loop = true;
+            lineRenderer.enabled = false; // Start with disabled
+        }
     }
 
     void Update()
@@ -22,10 +29,49 @@ public class PlayerRadiusDetector : MonoBehaviour
        // CheckForSheepInRadius();  // Always check per frame
     }
 
+    public void ToggleRadiusDisplay(bool show)
+    {
+        if (lineRenderer)
+        {
+            lineRenderer.enabled = show;
+            UpdateRadiusColor();
+        }
+    }
+    public void UpdateRadiusVisuals()
+    {
+        if (!lineRenderer || !lineRenderer.enabled) return;
+
+        hasValidTarget = CheckForSheepInRadius();
+        UpdateRadiusColor();
+        UpdateRadiusCircle();
+    }
+    void UpdateRadiusColor()
+    {
+        lineRenderer.material = hasValidTarget ? greenColor : RedColor;
+        lineRenderer.material = hasValidTarget ? greenColor : RedColor;
+    }
+    bool CheckForSheepInRadius()
+    {
+        GameObject[] allSheep = GameObject.FindGameObjectsWithTag(sheepTag);
+
+        foreach (GameObject sheep in allSheep)
+        {
+            if (sheep == playerController.lastJumpedFromAnimal) continue;
+
+            Vector3 directionToSheep = sheep.transform.position - transform.position;
+            float distance = directionToSheep.magnitude;
+            float dotProduct = Vector3.Dot(transform.forward, directionToSheep.normalized);
+
+            if (distance <= detectionRadius && dotProduct > 0.3f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void UpdateRadiusCircle()
     {
-        if (!lineRenderer) return;
-
         int segments = 50;
         lineRenderer.positionCount = segments + 1;
         float angle = 0f;
@@ -40,31 +86,5 @@ public class PlayerRadiusDetector : MonoBehaviour
         }
     }
 
-    void CheckForSheepInRadius()
-    {
-      //  if (gamePaused || !playerController.IsRunning()) return;
 
-        GameObject[] allSheep = GameObject.FindGameObjectsWithTag(sheepTag);
-        foreach (GameObject sheep in allSheep)
-        {
-            float distance = Vector3.Distance(transform.position, sheep.transform.position);
-            if (distance <= detectionRadius)
-            {
-                PauseGame();
-                break;
-            }
-        }
-    }
-
-
-
-   
-
-    void PauseGame()
-    {
-        Time.timeScale = 0f;
-        gamePaused = true;
-        Debug.Log("Paused: Sheep entered radius while running");
-        // Optional: Show pause menu or event
-    }
 }

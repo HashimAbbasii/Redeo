@@ -26,7 +26,9 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 4f;
     public string sheepTag = "Animal";
     private bool hasJumpedOffAnimal = false;
-    private GameObject lastJumpedFromAnimal = null;
+    public GameObject lastJumpedFromAnimal = null;
+    public PlayerRadiusDetector radiusDetector;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -38,6 +40,11 @@ public class PlayerController : MonoBehaviour
     {
         HandleInput();
         UpdateAnimator();
+
+        if (radiusDetector && radiusDetector.lineRenderer.enabled)
+        {
+            radiusDetector.UpdateRadiusVisuals();
+        }
 
         // Don't allow new jumps if already jumping
         if (isJumping) return;
@@ -158,7 +165,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Riding",false);
         animator.SetBool("Jump",false);
         animator.SetBool("Death",true);
-       
+        if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
         //Time.timeScale = 0f;
         Debug.Log("Game Paused - Radius-based detection triggered");
     }
@@ -166,9 +173,9 @@ public class PlayerController : MonoBehaviour
 IEnumerator JumpArcAndSnap()
 {
     Debug.Log("[JUMP START] Initializing jump sequence...");
-    
-    // Immediately clear parent and prepare for jump
-    transform.SetParent(null);
+        if (radiusDetector) radiusDetector.ToggleRadiusDisplay(true);
+        // Immediately clear parent and prepare for jump
+        transform.SetParent(null);
     rb.isKinematic = false;
     isJumping = true;
     isRiding = false;
@@ -301,7 +308,8 @@ IEnumerator JumpArcAndSnap()
     animator.SetBool("Jump", false);
 
     Debug.Log($"[JUMP END] Jump sequence completed. snapped={snapped}, isJumping={isJumping}");
-}
+        if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
+    }
 
 
     bool SnapToSheep(Transform sheep)
@@ -331,9 +339,9 @@ IEnumerator JumpArcAndSnap()
     Debug.Log("Setting animation states: Jump->false, Riding->true");
     animator.SetBool("Jump", false);
     animator.SetBool("Riding", true);
-
-    // Physics setup
-    Debug.Log("Resetting physics - velocity to zero, kinematic to true");
+        if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
+        // Physics setup
+        Debug.Log("Resetting physics - velocity to zero, kinematic to true");
     rb.velocity = Vector3.zero;
     rb.isKinematic = true;
 
@@ -380,7 +388,7 @@ IEnumerator JumpArcAndSnap()
     isJumping = false;
     hasJumpedOffAnimal = false;
 
-    Debug.Log($"Clearing lastJumpedFromAnimal (was: {lastJumpedFromAnimal?.name ?? "null"})");
+    Debug.Log($"Clearing lastJumpedFromAnimal (was:  ?? ");
     lastJumpedFromAnimal = null;
 
     // Final animation check
@@ -438,5 +446,17 @@ IEnumerator JumpArcAndSnap()
         }
 
         return closestSheep;
+    }
+   // public bool isRunning = false;
+    private bool runUnlocked = false;
+
+    public void EnableRunning()
+    {
+        if (!runUnlocked)
+        {
+            runUnlocked = true;
+            isRunning = true;
+            // Set animator and speed to run
+        }
     }
 }
