@@ -31,10 +31,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("Particle Effect")]
     public ParticleSystem SnapSplash;
+    public GameOverPanel gameOverPanel;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        gameOverPanel = FindObjectOfType<GameOverPanel>();
+
     }
     private float spawnCooldown = 8f; // 1 second between spawns
     private float lastSpawnTime = 0f;
@@ -169,6 +172,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Death",true);
         if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
         //Time.timeScale = 0f;
+        gameOverPanel.GameOver();
         Debug.Log("Game Paused - Radius-based detection triggered");
     }
 
