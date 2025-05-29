@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class OverlapChecker : MonoBehaviour
 {
@@ -15,11 +17,18 @@ public class OverlapChecker : MonoBehaviour
     private GameObject selectedObject;
     private Plane dragPlane;
     private Vector3 offset;
+    public TextMeshProUGUI OverlapText;
+    private GameOverPanel gameOver;
 
+    public void Home()
+    {
+        SceneManager.LoadScene(0);
+    }
     void Start()
     {
         sphereRenderer = sphere.GetComponent<Renderer>();
         cuboidRenderer = cuboid.GetComponent<Renderer>();
+        gameOver = FindObjectOfType<GameOverPanel>();
     }
 
     void Update()
@@ -72,9 +81,11 @@ public class OverlapChecker : MonoBehaviour
             {
                 sphereRenderer.material = overlapMaterial;
                 cuboidRenderer.material = overlapMaterial;
+                OverlapText.gameObject.SetActive(true);
             }
             else
             {
+                OverlapText.gameObject.SetActive(false);
                 if (selectedObject == sphere)
                 {
                     sphereRenderer.material = selectedMaterial;
@@ -94,11 +105,14 @@ public class OverlapChecker : MonoBehaviour
             {
                 sphereRenderer.material = overlapMaterial;
                 cuboidRenderer.material = overlapMaterial;
+                OverlapText.gameObject.SetActive(false);
             }
             else
             {
                 sphereRenderer.material = defaultMaterial;
                 cuboidRenderer.material = defaultMaterial;
+                OverlapText.gameObject.SetActive(false);
+
             }
         }
     }

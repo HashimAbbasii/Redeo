@@ -5,6 +5,7 @@ using System.Collections;
 
 public class UiManager : MonoBehaviour
 {
+    public TextMeshProUGUI gameOverScore;
     public TMP_InputField enterTheName;
 
     public TMP_InputField enterTheAge;
@@ -47,7 +48,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
-   
+    
 
     public void SubmitButton()
     {

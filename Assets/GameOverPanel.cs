@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -45,6 +46,12 @@ public class GameOverPanel : MonoBehaviour
     {
         gameOverPanel.SetActive(true);
         AnimatePanel(gameOverPanel.GetComponent<RectTransform>(),true);
+    }
+
+    public TextMeshProUGUI gameOverScore;
+    public void GameOverText(TextMeshProUGUI scoreDisplay)
+    {
+        gameOverScore.text=scoreDisplay.text;
     }
     public void AnimatePanel(RectTransform panel, bool show, float duration = 0.5f)
     {

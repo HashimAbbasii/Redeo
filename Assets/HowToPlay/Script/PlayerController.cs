@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody), typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
+    public  TextMeshProUGUI scoreText;
     private Vector2 dragStartPos;
     private float dragSensitivity = 0.5f; // Tweak for faster/slower turn
     private AnimalController currentAnimal;
@@ -102,6 +104,13 @@ public class PlayerController : MonoBehaviour
             MovePlayer();
         }
     }
+
+    private int increment = 0;
+    public void ScoreIncrement()
+    {
+        increment=increment+1;
+        scoreText.text = increment.ToString();
+    }
     void HandleInput()
     {
 #if UNITY_EDITOR
@@ -170,6 +179,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Riding",false);
         animator.SetBool("Jump",false);
         animator.SetBool("Death",true);
+        gameOverPanel.GameOverText(scoreText);
         if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
         //Time.timeScale = 0f;
         gameOverPanel.GameOver();
@@ -345,6 +355,8 @@ IEnumerator JumpArcAndSnap()
     Debug.Log("Setting animation states: Jump->false, Riding->true");
     animator.SetBool("Jump", false);
     animator.SetBool("Riding", true);
+    ScoreIncrement();
+    //gameOverPanel.GameOverText(scoreText);
         if (radiusDetector) radiusDetector.ToggleRadiusDisplay(false);
         // Physics setup
         Debug.Log("Resetting physics - velocity to zero, kinematic to true");
